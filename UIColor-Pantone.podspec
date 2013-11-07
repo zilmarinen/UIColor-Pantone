@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "UIColor-Pantone"
-  s.version      = "0.1"
+  s.version      = "1.0"
   s.summary      = "Pantone colors UIColor category"
 
   s.description  = <<-DESC
