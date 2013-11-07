@@ -3,83 +3,14 @@
 //
 //*******
 //
-//	filename: pantone_colors.php
+//	filename: pantone.php
 //	author: Zack Brown
-//	date: 29/10/2013
+//	date: 07/11/2013
 //
 //*******
 //
 
-function uicolor_from_hex($hex)
-{
-	$dec = hexdec($hex);
-	
-	$red_255 = 0xFF & $dec >> 0x10;
-	$green_255 = 0xFF & $dec >> 0x8;
-	$blue_255 = 0xFF & $dec;
-
-	$red_1 = ((1 / 255) * $red_255);
-	$green_1 = ((1 / 255) * $green_255);
-	$blue_1 = ((1 / 255) * $blue_255);
-
-	return "[UIColor colorWithRed:" . number_format($red_1, 2) . " green:" . number_format($green_1, 2) . " blue:" . number_format($blue_1, 2) . " alpha:1.0]";
-}
-
-function pantone_color_from_hex($hex)
-{
-	$dec = hexdec($hex);
-	
-	$red_255 = 0xFF & $dec >> 0x10;
-	$green_255 = 0xFF & $dec >> 0x8;
-	$blue_255 = 0xFF & $dec;
-
-	$red_1 = ((1 / 255) * $red_255);
-	$green_1 = ((1 / 255) * $green_255);
-	$blue_1 = ((1 / 255) * $blue_255);
-
-	return "[[self class] pantoneColorWithRed:" . number_format($red_1, 2) . " green:" . number_format($green_1, 2) . " blue:" . number_format($blue_1, 2) . " alpha:1.0]";
-}
-
-function uicolor_name($name)
-{
-	return "pantone" . str_replace(" ", "", ucwords($name)) . "Color";
-}
-
-function uicolor_table_row($name, $hex, $width, $height, $image_url)
-{
-	$table_row = "\t<tr>\n";
-	$table_row .= "\t\t<td><img src=\"$image_url" . image_filename($name) . "\" alt=\"" . uicolor_name($name) . "\" width=\"$width\" height=\"$height\" /></td>\n";
-	$table_row .= "\t\t<td>$name</td>\n";
-	$table_row .= "\t\t<td>[UIColor " . uicolor_name($name) . "]</td>\n";
-	$table_row .= "\t\t<td>" . uicolor_from_hex($hex) . "</td>\n";
-	$table_row .= "\t</tr>\n\n";
-
-	return $table_row;
-}
-
-function generate_image_from_hex($name, $hex, $width, $height)
-{
-	$path = "../images/" . image_filename($name);
-
-	$dec = hexdec($hex);
-	
-	$red_255 = 0xFF & $dec >> 0x10;
-	$green_255 = 0xFF & $dec >> 0x8;
-	$blue_255 = 0xFF & $dec;
-
-	$image = imagecreatetruecolor($width, $height);
-
-	$background_color = imagecolorallocate($image, $red_255, $green_255, $blue_255);
-
-	imagefilledrectangle($image, 0, 0, $width, $height, $background_color);
-
-	imagepng($image, $path);
-}
-
-function image_filename($name)
-{
-	return str_replace(" ", "", ucwords($name)) . ".png";
-}
+require_once "color_list.php";
 
 $colors = array("ProcessYellow" => "#f7e214",
 "PMS100" => "#f4ed7c",
@@ -1072,8 +1003,14 @@ $colors = array("ProcessYellow" => "#f7e214",
 "PMS8112X" => "#ff5416",
 "PMS8122X" => "#fc074f",
 "PMS8132X" => "#d10084",
-"PMS8142X" => "#703faf",);
+"PMS8142X" => "#703faf");
 
-asort($colors);
+if(isset($color_lists))
+{
+	$color_lists[] = new ColorList("Pantone", $colors, "iOS");
+	$color_lists[] = new ColorList("Pantone", $colors, "OSX");
+}
+
+unset($colors);
 
 ?>
